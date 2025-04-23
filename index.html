@@ -1,125 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Perguntas e Respostas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-        }
-        .quiz-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .question {
-            font-size: 18px;
-            margin: 20px 0 10px;
-        }
-        .options {
-            list-style: none;
-            padding: 0;
-        }
-        .options li {
-            margin: 8px 0;
-        }
-        .options input {
-            margin-right: 10px;
-        }
-        .submit-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        .submit-btn:hover {
-            background-color: #45a049;
-        }
-        .result {
-            display: none;
-            text-align: center;
-            font-size: 20px;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Estudo da EBD - ICM SÃO JOSÉ</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background-color: #8B0000;
+      color: white;
+      padding: 20px;
+    }
+    .quiz-container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .option {
+      display: block;
+      background: #eee;
+      padding: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+    .option:hover {
+      background: #ddd;
+    }
+    .correct {
+      background-color: #c8e6c9 !important;
+    }
+    .wrong {
+      background-color: #ffcdd2 !important;
+    }
+    .image {
+      max-width: 100%;
+      margin: 20px 0;
+    }
+    #score {
+      font-size: 22px;
+      margin-top: 20px;
+    }
+    .fade {
+      animation: fadeIn 0.5s ease-in;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Quiz Bíblico - Cartas às Igrejas do Apocalipse</h1>
+  </header>
 
-    <h1>Quiz de Perguntas e Respostas</h1>
+  <div class="quiz-container fade" id="quiz">
+    <img class="image" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Seven_Churches_of_Asia_Map.svg/1200px-Seven_Churches_of_Asia_Map.svg.png" alt="Mapa das Sete Igrejas da Ásia">
+    <div class="question" id="question">Carregando...</div>
+    <div id="options"></div>
+    <div id="score"></div>
+  </div>
 
-    <div class="quiz-container">
-        <form id="quiz-form">
-            <div class="question">
-                <p>1. Qual é a capital do Brasil?</p>
-                <ul class="options">
-                    <li><input type="radio" name="q1" value="A"> A) São Paulo</li>
-                    <li><input type="radio" name="q1" value="B"> B) Brasília</li>
-                    <li><input type="radio" name="q1" value="C"> C) Rio de Janeiro</li>
-                </ul>
-            </div>
+  <script>
+    const questions = [
+      {
+        question: "Qual o período histórico representado pela igreja de Éfeso?",
+        options: ["Igreja Moderna", "Igreja Apostólica (30–100 d.C.)", "Igreja Imperial", "Igreja Medieval"],
+        answer: 1
+      },
+      {
+        question: "Qual o título glorioso de Jesus na carta à igreja de Esmirna?",
+        options: ["Filho de Deus", "Aquele que tem os sete Espíritos de Deus", "O primeiro e o último, que foi morto e reviveu", "Aquele que tem a espada afiada de dois gumes"],
+        answer: 2
+      },
+      {
+        question: "Qual a aplicação profética da igreja de Sardes?",
+        options: ["Chamado ao primeiro amor", "Aparência de vida sem realidade espiritual", "Fidelidade até à morte", "Rebeldia total contra Deus"],
+        answer: 1
+      },
+      {
+        question: "Qual o período histórico da igreja de Tiatira?",
+        options: ["538–1517 d.C.", "313–538 d.C.", "1517–1750 d.C.", "30–100 d.C."],
+        answer: 0
+      }
+    ];
 
-            <div class="question">
-                <p>2. Quem escreveu "Dom Casmurro"?</p>
-                <ul class="options">
-                    <li><input type="radio" name="q2" value="A"> A) Machado de Assis</li>
-                    <li><input type="radio" name="q2" value="B"> B) Clarice Lispector</li>
-                    <li><input type="radio" name="q2" value="C"> C) José Saramago</li>
-                </ul>
-            </div>
+    let currentQuestion = 0;
+    let score = 0;
 
-            <div class="question">
-                <p>3. Qual é o maior planeta do sistema solar?</p>
-                <ul class="options">
-                    <li><input type="radio" name="q3" value="A"> A) Terra</li>
-                    <li><input type="radio" name="q3" value="B"> B) Júpiter</li>
-                    <li><input type="radio" name="q3" value="C"> C) Saturno</li>
-                </ul>
-            </div>
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const scoreEl = document.getElementById("score");
 
-            <button type="button" class="submit-btn" onclick="checkAnswers()">Enviar Respostas</button>
-        </form>
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
 
-        <div id="result" class="result">
-            <p id="score"></p>
-        </div>
-    </div>
+      q.options.forEach((opt, index) => {
+        const button = document.createElement("button");
+        button.className = "option";
+        button.textContent = opt;
+        button.onclick = () => checkAnswer(index);
+        optionsEl.appendChild(button);
+      });
+    }
 
-    <script>
-        function checkAnswers() {
-            let score = 0;
-            const totalQuestions = 3;
-            const answers = {
-                q1: 'B',
-                q2: 'A',
-                q3: 'B'
-            };
+    function checkAnswer(selected) {
+      const correct = questions[currentQuestion].answer;
+      const buttons = document.querySelectorAll(".option");
 
-            for (let i = 1; i <= totalQuestions; i++) {
-                const userAnswer = document.querySelector(`input[name="q${i}"]:checked`);
-                if (userAnswer && userAnswer.value === answers[`q${i}`]) {
-                    score++;
-                }
-            }
+      buttons.forEach((btn, idx) => {
+        btn.classList.remove("correct", "wrong");
+        btn.disabled = true;
+        if (idx === correct) btn.classList.add("correct");
+        if (idx === selected && idx !== correct) btn.classList.add("wrong");
+      });
 
-            const resultDiv = document.getElementById('result');
-            const scoreText = document.getElementById('score');
-            scoreText.textContent = `Você acertou ${score} de ${totalQuestions} perguntas!`;
-            resultDiv.style.display = 'block';
+      if (selected === correct) score++;
+
+      setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+          loadQuestion();
+        } else {
+          showScore();
         }
-    </script>
+      }, 1000);
+    }
 
+    function showScore() {
+      questionEl.textContent = "Quiz Finalizado!";
+      optionsEl.innerHTML = "";
+      scoreEl.innerHTML = `Pontuação: <strong>${score}</strong> de ${questions.length}`;
+    }
+
+    loadQuestion();
+  </script>
 </body>
 </html>
+
+   
+   
+
+         
+           
+   
